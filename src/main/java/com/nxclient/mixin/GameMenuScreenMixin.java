@@ -21,8 +21,8 @@ public abstract class GameMenuScreenMixin extends Screen {
     @Inject(at = @At("RETURN"), method = "init")
     private void addNXClientButton(CallbackInfo ci) {
         this.addDrawableChild(
-                ButtonWidget.builder(Text.literal("§0NX Client"), button ->
-                        MinecraftClient.getInstance().setScreen(new NXClientScreen(this))
+                ButtonWidget.builder(Text.literal("NX Client"), button ->
+                        MinecraftClient.getInstance().setScreen(new NXClientScreen())
                 ).dimensions(10, 10, 100, 20).build()
         );
     }

@@ -1,5 +1,6 @@
 package com.nxclient;
 
+import com.nxclient.gui.NXClientScreen;
 import com.nxclient.modules.ModuleManager;
 import com.nxclient.modules.render.HUD;
 import net.fabricmc.api.ClientModInitializer;
@@ -35,7 +36,7 @@ public class NXClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (openGuiKey.wasPressed()) {
                 if (client.currentScreen == null && client.player != null) {
-                    client.setScreen(new com.nxclient.gui.NXClientScreen(null));
+                    client.setScreen(new NXClientScreen());
                 }
             }
         });

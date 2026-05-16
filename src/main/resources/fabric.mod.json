@@ -4,7 +4,7 @@
   "version": "${version}",
   "name": "NX Client",
   "description": "A powerful Fabric utility mod for Minecraft 1.21.4.",
-  "authors": ["dilekarkun6"],
+  "authors": ["Novatex"],
   "contact": {
     "sources": "https://github.com/dilekarkun6/NX-Client"
   },

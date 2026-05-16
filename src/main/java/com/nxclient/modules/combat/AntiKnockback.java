@@ -7,7 +7,7 @@ public class AntiKnockback extends Module {
     public static boolean active = false;
 
     public AntiKnockback() {
-        super("AntiKnockback", "Reduces knockback taken from hits.", Category.COMBAT);
+        super("AntiKnockback", "Cancels knockback velocity packets from the server.", Category.COMBAT);
     }
 
     @Override

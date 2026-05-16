@@ -5,8 +5,12 @@
   "client": [
     "EntityMixin",
     "GameMenuScreenMixin",
-    "ClientPlayerEntityMixin",
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "ClientPlayNetworkHandlerMixin",
+    "ClientConnectionMixin",
+    "PlayerMoveC2SPacketMixin",
+    "GameRendererMixin",
+    "SimpleOptionAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

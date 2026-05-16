@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.text.Text;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 
@@ -16,11 +17,10 @@ public class Reach extends Module {
 
     public static boolean active = false;
     private static final double MAX_REACH = 100.0;
-    private static final double STEP_SIZE = 8.0;
     private boolean wasAttackDown = false;
 
     public Reach() {
-        super("Reach", "Attacks entities from extreme distances via packet teleport.", Category.MISC);
+        super("Reach", "Attacks entities from extreme distances via 2-packet teleport.", Category.MISC);
     }
 
     @Override
@@ -45,33 +45,30 @@ public class Reach extends Module {
         if (target == null) return;
 
         Vec3d origin = client.player.getPos();
-        Vec3d dest = target.getPos();
-        double distance = origin.distanceTo(dest);
+        Vec3d targetPos = target.getPos();
+        double distance = origin.distanceTo(targetPos);
+
+        boolean isOnGround = client.player.isOnGround();
+
+        client.getNetworkHandler().sendPacket(
+                new PlayerMoveC2SPacket.PositionAndOnGround(targetPos.x, targetPos.y, targetPos.z, isOnGround, false)
+        );
+
+        client.getNetworkHandler().sendPacket(
+                PlayerInteractEntityC2SPacket.attack(target, client.player.isSneaking())
+        );
+
+        client.getNetworkHandler().sendPacket(
+                new PlayerMoveC2SPacket.PositionAndOnGround(origin.x, origin.y, origin.z, isOnGround, false)
+        );
+
+        client.player.swingHand(Hand.MAIN_HAND);
+        client.player.playSound(net.minecraft.sound.SoundEvents.ENTITY_PLAYER_ATTACK_STRONG, 1f, 1f);
 
         client.player.sendMessage(
                 Text.literal("§c" + target.getName().getString() + " §7| §e" + String.format("%.1f", distance) + "m"),
                 true
         );
-
-        int steps = Math.max(1, (int) Math.ceil(distance / STEP_SIZE));
-        double dx = dest.x - origin.x;
-        double dy = dest.y - origin.y;
-        double dz = dest.z - origin.z;
-
-        for (int i = 1; i <= steps; i++) {
-            double t = (double) i / steps;
-            sendPos(client, origin.x + dx * t, origin.y + dy * t, origin.z + dz * t);
-        }
-
-        client.getNetworkHandler().sendPacket(
-                PlayerInteractEntityC2SPacket.attack(target, client.player.isSneaking())
-        );
-        client.player.playSound(net.minecraft.sound.SoundEvents.ENTITY_PLAYER_ATTACK_STRONG, 1f, 1f);
-
-        for (int i = steps - 1; i >= 0; i--) {
-            double t = (double) i / steps;
-            sendPos(client, origin.x + dx * t, origin.y + dy * t, origin.z + dz * t);
-        }
     }
 
     private Entity getTarget(MinecraftClient client) {
@@ -90,9 +87,5 @@ public class Reach extends Module {
             if (dist < closestDist) { closestDist = dist; closest = entity; }
         }
         return closest;
-    }
-
-    private void sendPos(MinecraftClient client, double x, double y, double z) {
-        client.getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.PositionAndOnGround(x, y, z, true, false));
     }
 }

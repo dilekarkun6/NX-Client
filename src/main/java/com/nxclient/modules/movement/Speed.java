@@ -9,10 +9,10 @@ import net.minecraft.util.math.Vec3d;
 public class Speed extends Module {
 
     public static boolean active = false;
-    private static final double SPEED_MULT = 1.8;
+    private static final double SPEED = 0.35;
 
     public Speed() {
-        super("Speed", "Move faster on the ground.", Category.MOVEMENT);
+        super("Speed", "Sprint-like ground speed boost (no momentum drift).", Category.MOVEMENT);
     }
 
     @Override
@@ -30,12 +30,25 @@ public class Speed extends Module {
         ClientPlayerEntity player = client.player;
         if (!player.isOnGround()) return;
 
-        Vec3d vel = player.getVelocity();
-        double hSpeed = Math.sqrt(vel.x * vel.x + vel.z * vel.z);
+        boolean forward = client.options.forwardKey.isPressed();
+        boolean back = client.options.backKey.isPressed();
+        boolean left = client.options.leftKey.isPressed();
+        boolean right = client.options.rightKey.isPressed();
 
-        if (hSpeed > 0.01) {
-            double factor = SPEED_MULT / hSpeed;
-            player.setVelocity(vel.x * factor, vel.y, vel.z * factor);
-        }
+        if (!forward && !back && !left && !right) return;
+
+        Vec3d forwardVec = Vec3d.fromPolar(0, player.getYaw());
+        Vec3d rightVec = Vec3d.fromPolar(0, player.getYaw() + 90);
+
+        double vx = 0;
+        double vz = 0;
+
+        if (forward) { vx += forwardVec.x * SPEED; vz += forwardVec.z * SPEED; }
+        if (back)    { vx -= forwardVec.x * SPEED; vz -= forwardVec.z * SPEED; }
+        if (right)   { vx += rightVec.x * SPEED;   vz += rightVec.z * SPEED; }
+        if (left)    { vx -= rightVec.x * SPEED;   vz -= rightVec.z * SPEED; }
+
+        Vec3d vel = player.getVelocity();
+        player.setVelocity(vx, vel.y, vz);
     }
 }

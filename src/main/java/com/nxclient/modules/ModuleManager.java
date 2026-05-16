@@ -1,13 +1,15 @@
 package com.nxclient.modules;
 
-import com.nxclient.modules.combat.KillAura;
 import com.nxclient.modules.combat.AntiKnockback;
+import com.nxclient.modules.combat.Criticals;
+import com.nxclient.modules.combat.KillAura;
+import com.nxclient.modules.movement.Blink;
+import com.nxclient.modules.movement.BotFly;
 import com.nxclient.modules.movement.Fly;
-import com.nxclient.modules.movement.Speed;
 import com.nxclient.modules.movement.NoFall;
+import com.nxclient.modules.movement.Speed;
 import com.nxclient.modules.movement.Sprint;
 import com.nxclient.modules.movement.Step;
-import com.nxclient.modules.movement.Blink;
 import com.nxclient.modules.player.AutoEat;
 import com.nxclient.modules.player.NoHunger;
 import com.nxclient.modules.render.ESP;
@@ -26,8 +28,10 @@ public class ModuleManager {
     public static void init() {
         register(new KillAura());
         register(new AntiKnockback());
+        register(new Criticals());
 
         register(new Fly());
+        register(new BotFly());
         register(new Speed());
         register(new NoFall());
         register(new Sprint());
