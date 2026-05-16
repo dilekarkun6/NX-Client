@@ -3,13 +3,17 @@
   "package": "com.nxclient.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "BlockMixin",
+    "ClientConnectionMixin",
+    "ClientPlayNetworkHandlerMixin",
+    "ClientPlayerInteractionManagerMixin",
     "EntityMixin",
     "GameMenuScreenMixin",
-    "LivingEntityMixin",
-    "ClientPlayNetworkHandlerMixin",
-    "ClientConnectionMixin",
-    "PlayerMoveC2SPacketMixin",
     "GameRendererMixin",
+    "KeyBindingAccessor",
+    "LivingEntityMixin",
+    "MinecraftClientMixin",
+    "PlayerMoveC2SPacketMixin",
     "SimpleOptionAccessor"
   ],
   "injectors": {
