@@ -6,7 +6,6 @@
     "EntityMixin",
     "GameMenuScreenMixin",
     "ClientPlayerEntityMixin",
-    "GameRendererMixin",
     "LivingEntityMixin"
   ],
   "injectors": {

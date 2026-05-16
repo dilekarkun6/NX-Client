@@ -11,10 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ClientPlayerEntity.class)
 public class ClientPlayerEntityMixin {
 
-    @Inject(method = "applyMovementInput", at = @At("HEAD"))
-    private void onApplyMovement(Vec3d movementInput, boolean sneaking, CallbackInfo ci) {
-    }
-
     @Inject(method = "tickMovement", at = @At("HEAD"))
     private void onTickMovement(CallbackInfo ci) {
         if (!AntiKnockback.active) return;

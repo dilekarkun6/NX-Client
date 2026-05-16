@@ -3,7 +3,8 @@ package com.nxclient.modules.player;
 import com.nxclient.modules.Module;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.FoodComponent;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.FoodComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 
@@ -26,7 +27,7 @@ public class AutoEat extends Module {
     public void onDisable() { active = false; }
 
     private void tick(MinecraftClient client) {
-        if (!active || client.player == null) return;
+        if (!active || client.player == null || client.interactionManager == null) return;
 
         int foodLevel = client.player.getHungerManager().getFoodLevel();
         if (foodLevel >= HUNGER_THRESHOLD) return;
@@ -34,7 +35,7 @@ public class AutoEat extends Module {
         for (int i = 0; i < 9; i++) {
             ItemStack stack = client.player.getInventory().getStack(i);
             if (stack.isEmpty()) continue;
-            FoodComponent food = stack.getItem().getFoodComponent();
+            FoodComponent food = stack.get(DataComponentTypes.FOOD);
             if (food == null) continue;
 
             client.player.getInventory().selectedSlot = i;
