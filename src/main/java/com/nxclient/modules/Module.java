@@ -1,11 +1,17 @@
 package com.nxclient.modules;
 
+import com.nxclient.modules.settings.Setting;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Module {
 
     private final String name;
     private final String description;
     private final Category category;
     protected boolean enabled = false;
+    public final List<Setting<?>> settings = new ArrayList<>();
 
     public enum Category {
         COMBAT, MOVEMENT, RENDER, PLAYER, MISC

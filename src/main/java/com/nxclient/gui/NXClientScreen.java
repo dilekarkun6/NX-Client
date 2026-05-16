@@ -36,7 +36,7 @@ public class NXClientScreen extends Screen {
             defaultX += 120;
             if (defaultX > this.width - 120) {
                 defaultX = 12;
-                defaultY += 140;
+                defaultY += 160;
             }
         }
     }
@@ -46,7 +46,7 @@ public class NXClientScreen extends Screen {
         this.renderBackground(context, mouseX, mouseY, delta);
 
         context.drawTextWithShadow(this.textRenderer, Text.literal("§fNX Client §7by Novatex"), 6, this.height - 14, 0xFFFFFF);
-        context.drawTextWithShadow(this.textRenderer, Text.literal("§7Drag headers to move panels. ESC to close."), 6, this.height - 26, 0xAAAAAA);
+        context.drawTextWithShadow(this.textRenderer, Text.literal("§7L-click = toggle  §8|  §7R-click = settings  §8|  §7Drag header = move"), 6, this.height - 26, 0xAAAAAA);
 
         for (CategoryPanel panel : panels) {
             panel.render(context, mouseX, mouseY, this.textRenderer);
@@ -65,11 +65,11 @@ public class NXClientScreen extends Screen {
                     dragOffsetY = (int) mouseY - panel.y;
                     return true;
                 }
-                int idx = panel.getModuleIndexAt(mouseX, mouseY);
-                if (idx >= 0) {
-                    panel.toggleModuleAt(idx);
-                    return true;
-                }
+            }
+        }
+        for (CategoryPanel panel : panels) {
+            if (panel.handleClick(mouseX, mouseY, button) == CategoryPanel.ClickResult.HANDLED) {
+                return true;
             }
         }
         return super.mouseClicked(mouseX, mouseY, button);

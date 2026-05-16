@@ -1,6 +1,7 @@
 package com.nxclient.modules.combat;
 
 import com.nxclient.modules.Module;
+import com.nxclient.modules.settings.DoubleSetting;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
@@ -12,12 +13,14 @@ import java.util.List;
 
 public class KillAura extends Module {
 
-    private static final double RANGE = 4.5;
+    public final DoubleSetting range = new DoubleSetting("Range", 4.5, 3.0, 6.0, 0.1);
+    public final DoubleSetting cooldownTicks = new DoubleSetting("Cooldown", 10.0, 1.0, 20.0, 1.0);
     private int cooldown = 0;
-    private static final int COOLDOWN_TICKS = 10;
 
     public KillAura() {
         super("KillAura", "Attacks ALL nearby living entities at once.", Category.COMBAT);
+        settings.add(range);
+        settings.add(cooldownTicks);
     }
 
     @Override
@@ -28,18 +31,16 @@ public class KillAura extends Module {
     private void tick(MinecraftClient client) {
         if (!isEnabled() || client.player == null || client.world == null) return;
 
-        if (cooldown > 0) {
-            cooldown--;
-            return;
-        }
+        if (cooldown > 0) { cooldown--; return; }
 
+        double r = range.value;
         List<LivingEntity> targets = client.world.getEntitiesByClass(
                 LivingEntity.class,
-                client.player.getBoundingBox().expand(RANGE),
+                client.player.getBoundingBox().expand(r),
                 e -> e != client.player
                         && e.isAlive()
                         && !(e instanceof PlayerEntity && ((PlayerEntity) e).isCreative())
-                        && client.player.distanceTo(e) <= RANGE
+                        && client.player.distanceTo(e) <= r
         );
 
         if (targets.isEmpty()) return;
@@ -50,6 +51,6 @@ public class KillAura extends Module {
             );
         }
         client.player.swingHand(Hand.MAIN_HAND);
-        cooldown = COOLDOWN_TICKS;
+        cooldown = cooldownTicks.value.intValue();
     }
 }

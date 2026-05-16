@@ -3,9 +3,9 @@ package com.nxclient.modules;
 import com.nxclient.modules.combat.AntiKnockback;
 import com.nxclient.modules.combat.Criticals;
 import com.nxclient.modules.combat.KillAura;
-import com.nxclient.modules.movement.Blink;
 import com.nxclient.modules.movement.BotFly;
 import com.nxclient.modules.movement.Fly;
+import com.nxclient.modules.movement.NoClip;
 import com.nxclient.modules.movement.NoFall;
 import com.nxclient.modules.movement.Speed;
 import com.nxclient.modules.movement.Spider;
@@ -15,7 +15,6 @@ import com.nxclient.modules.player.AutoArmor;
 import com.nxclient.modules.player.AutoEat;
 import com.nxclient.modules.player.AutoTotem;
 import com.nxclient.modules.player.Freecam;
-import com.nxclient.modules.player.InvWalk;
 import com.nxclient.modules.player.NoHunger;
 import com.nxclient.modules.render.ESP;
 import com.nxclient.modules.render.FullBright;
@@ -44,16 +43,15 @@ public class ModuleManager {
         register(new BotFly());
         register(new Speed());
         register(new NoFall());
+        register(new NoClip());
         register(new Sprint());
         register(new Step());
         register(new Spider());
-        register(new Blink());
 
         register(new AutoEat());
         register(new NoHunger());
         register(new AutoTotem());
         register(new AutoArmor());
-        register(new InvWalk());
         register(new Freecam());
 
         register(new ESP());

@@ -10,7 +10,6 @@
     "EntityMixin",
     "GameMenuScreenMixin",
     "GameRendererMixin",
-    "KeyBindingAccessor",
     "LivingEntityMixin",
     "MinecraftClientMixin",
     "PlayerMoveC2SPacketMixin",

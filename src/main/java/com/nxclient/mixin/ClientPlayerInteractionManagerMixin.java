@@ -7,9 +7,9 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
-import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,19 +25,24 @@ public abstract class ClientPlayerInteractionManagerMixin {
     private void onAttackEntityHead(PlayerEntity player, Entity target, CallbackInfo ci) {
         if (!Criticals.active) return;
         if (!(player instanceof ClientPlayerEntity)) return;
+        if (!(target instanceof LivingEntity)) return;
+        if (player.fallDistance > 0.0f) return;
         if (!player.isOnGround()) return;
         if (player.isInsideWaterOrBubbleColumn()) return;
-        if (player.hasVehicle()) return;
         if (player.isClimbing()) return;
+        if (player.hasVehicle()) return;
         if (player.getAbilities().flying) return;
+        if (player.isSprinting()) return;
 
         ClientPlayNetworkHandler nh = MinecraftClient.getInstance().getNetworkHandler();
         if (nh == null) return;
 
-        Vec3d pos = player.getPos();
-        nh.sendPacket(new PlayerMoveC2SPacket.PositionAndOnGround(pos.x, pos.y + 0.1, pos.z, false, false));
-        nh.sendPacket(new PlayerMoveC2SPacket.PositionAndOnGround(pos.x, pos.y + 0.0625, pos.z, false, false));
-        nh.sendPacket(new PlayerMoveC2SPacket.PositionAndOnGround(pos.x, pos.y, pos.z, false, false));
+        double x = player.getX();
+        double y = player.getY();
+        double z = player.getZ();
+
+        nh.sendPacket(new PlayerMoveC2SPacket.PositionAndOnGround(x, y + 0.0625, z, false, false));
+        nh.sendPacket(new PlayerMoveC2SPacket.PositionAndOnGround(x, y, z, false, false));
     }
 
     @Inject(method = "attackEntity", at = @At("TAIL"))
@@ -48,8 +53,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
         ClientPlayNetworkHandler nh = MinecraftClient.getInstance().getNetworkHandler();
         if (nh == null) return;
 
-        Vec3d pos = player.getPos();
-        nh.sendPacket(new PlayerMoveC2SPacket.PositionAndOnGround(pos.x, pos.y, pos.z, true, false));
+        nh.sendPacket(new PlayerMoveC2SPacket.OnGroundOnly(true, false));
     }
 
     @Inject(method = "tick", at = @At("HEAD"))

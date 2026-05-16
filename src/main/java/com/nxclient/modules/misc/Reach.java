@@ -1,6 +1,7 @@
 package com.nxclient.modules.misc;
 
 import com.nxclient.modules.Module;
+import com.nxclient.modules.settings.DoubleSetting;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
@@ -16,11 +17,12 @@ import java.util.Optional;
 public class Reach extends Module {
 
     public static boolean active = false;
-    private static final double MAX_REACH = 100.0;
+    public final DoubleSetting maxReach = new DoubleSetting("MaxReach", 60.0, 6.0, 200.0, 5.0);
     private boolean wasAttackDown = false;
 
     public Reach() {
         super("Reach", "Attacks entities from extreme distances via 2-packet teleport.", Category.MISC);
+        settings.add(maxReach);
     }
 
     @Override
@@ -53,11 +55,9 @@ public class Reach extends Module {
         client.getNetworkHandler().sendPacket(
                 new PlayerMoveC2SPacket.PositionAndOnGround(targetPos.x, targetPos.y, targetPos.z, isOnGround, false)
         );
-
         client.getNetworkHandler().sendPacket(
                 PlayerInteractEntityC2SPacket.attack(target, client.player.isSneaking())
         );
-
         client.getNetworkHandler().sendPacket(
                 new PlayerMoveC2SPacket.PositionAndOnGround(origin.x, origin.y, origin.z, isOnGround, false)
         );
@@ -72,12 +72,13 @@ public class Reach extends Module {
     }
 
     private Entity getTarget(MinecraftClient client) {
+        double maxR = maxReach.value;
         Vec3d camera = client.player.getCameraPosVec(1.0F);
         Vec3d rotation = client.player.getRotationVec(1.0F);
-        Vec3d end = camera.add(rotation.multiply(MAX_REACH));
+        Vec3d end = camera.add(rotation.multiply(maxR));
 
         Entity closest = null;
-        double closestDist = MAX_REACH;
+        double closestDist = maxR;
 
         for (Entity entity : client.world.getEntities()) {
             if (entity == client.player || !entity.isAlive()) continue;
