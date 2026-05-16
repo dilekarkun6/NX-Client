@@ -24,18 +24,65 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
+        id: build
+        run: ./gradlew build 2>&1 | tee build_output.txt; exit ${PIPESTATUS[0]}
 
-      - name: Upload JAR
+      - name: Upload JAR on success
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: nxclient-jar
           path: build/libs/nxclient-*.jar
           if-no-files-found: error
 
-      - name: Upload error log on failure
+      - name: Extract errors and create error.txt
+        if: failure()
+        run: |
+          python3 - << 'PYEOF'
+          import re
+
+          with open("build_output.txt", "r", encoding="utf-8", errors="replace") as f:
+              raw = f.read()
+
+          lines = raw.splitlines()
+          error_lines = []
+          seen = set()
+
+          patterns = [
+              r"error:",
+              r"ERROR",
+              r"FAILED",
+              r"Exception",
+              r"Could not",
+              r"Caused by",
+              r"Build FAILED",
+              r"Execution failed",
+          ]
+          combined = re.compile("|".join(patterns))
+
+          for i, line in enumerate(lines):
+              if combined.search(line):
+                  start = max(0, i - 2)
+                  end = min(len(lines), i + 4)
+                  block = "\n".join(lines[start:end])
+                  if block not in seen:
+                      seen.add(block)
+                      error_lines.append(block)
+                      error_lines.append("---")
+
+          output = "\n".join(error_lines) if error_lines else "No specific errors captured.\n\nLast 3000 chars:\n" + raw[-3000:]
+
+          with open("error.txt", "w", encoding="utf-8") as f:
+              f.write("NX Client Build Error Report\n")
+              f.write("=" * 40 + "\n\n")
+              f.write(output)
+
+          print("error.txt written.")
+          PYEOF
+
+      - name: Upload error.txt on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: build-error-log
-          path: build/tmp/
+          name: error
+          path: error.txt
