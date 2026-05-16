@@ -3,8 +3,9 @@ package com.nxclient.modules.player;
 import com.nxclient.modules.Module;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.EquippableComponent;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.SlotActionType;
 
@@ -33,7 +34,8 @@ public class AutoArmor extends Module {
 
         for (EquipmentSlot slot : new EquipmentSlot[]{ EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET }) {
             ItemStack equipped = client.player.getEquippedStack(slot);
-            int bestSlot = findBestArmorSlot(client, slot, getMaterialValue(equipped));
+            int currentValue = getMaterialValue(equipped);
+            int bestSlot = findBestArmorSlot(client, slot, currentValue);
             if (bestSlot != -1) {
                 int containerSlot;
                 if (bestSlot < 9) containerSlot = bestSlot + 36;
@@ -48,10 +50,11 @@ public class AutoArmor extends Module {
                 };
                 if (armorSlotIndex == -1) continue;
 
-                client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, containerSlot, 0, SlotActionType.PICKUP, client.player);
-                client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, armorSlotIndex, 0, SlotActionType.PICKUP, client.player);
+                int syncId = client.player.playerScreenHandler.syncId;
+                client.interactionManager.clickSlot(syncId, containerSlot, 0, SlotActionType.PICKUP, client.player);
+                client.interactionManager.clickSlot(syncId, armorSlotIndex, 0, SlotActionType.PICKUP, client.player);
                 if (!client.player.currentScreenHandler.getCursorStack().isEmpty()) {
-                    client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, containerSlot, 0, SlotActionType.PICKUP, client.player);
+                    client.interactionManager.clickSlot(syncId, containerSlot, 0, SlotActionType.PICKUP, client.player);
                 }
                 delay = 5;
                 return;
@@ -64,8 +67,8 @@ public class AutoArmor extends Module {
         int bestValue = currentValue;
         for (int i = 0; i < client.player.getInventory().main.size(); i++) {
             ItemStack stack = client.player.getInventory().getStack(i);
-            if (!(stack.getItem() instanceof ArmorItem armor)) continue;
-            if (!matchesSlot(armor, targetSlot)) continue;
+            if (stack.isEmpty()) continue;
+            if (!matchesSlot(stack, targetSlot)) continue;
             int value = getMaterialValue(stack);
             if (value > bestValue) {
                 bestValue = value;
@@ -75,13 +78,21 @@ public class AutoArmor extends Module {
         return bestSlot;
     }
 
-    private boolean matchesSlot(ArmorItem armor, EquipmentSlot slot) {
-        return armor.getSlotType() == slot;
+    private boolean matchesSlot(ItemStack stack, EquipmentSlot slot) {
+        EquippableComponent equippable = stack.get(DataComponentTypes.EQUIPPABLE);
+        return equippable != null && equippable.slot() == slot;
     }
 
     private int getMaterialValue(ItemStack stack) {
         if (stack.isEmpty()) return -1;
-        if (!(stack.getItem() instanceof ArmorItem armor)) return -1;
-        return armor.getProtection();
+        String id = stack.getItem().toString().toLowerCase();
+        if (id.contains("netherite")) return 5;
+        if (id.contains("diamond")) return 4;
+        if (id.contains("turtle")) return 3;
+        if (id.contains("iron")) return 3;
+        if (id.contains("chainmail")) return 2;
+        if (id.contains("gold")) return 1;
+        if (id.contains("leather")) return 0;
+        return -1;
     }
 }
