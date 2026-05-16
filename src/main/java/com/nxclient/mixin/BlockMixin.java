@@ -14,7 +14,10 @@ public abstract class BlockMixin {
 
     @Inject(method = "shouldDrawSide", at = @At("HEAD"), cancellable = true)
     private static void onShouldDrawSide(BlockState state, BlockState otherState, Direction side, CallbackInfoReturnable<Boolean> cir) {
-        if (XRay.active && !XRay.isOre(state.getBlock())) {
+        if (!XRay.active) return;
+        if (XRay.isOre(state.getBlock())) {
+            cir.setReturnValue(true);
+        } else {
             cir.setReturnValue(false);
         }
     }
