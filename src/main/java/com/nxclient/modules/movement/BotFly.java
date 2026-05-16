@@ -6,15 +6,15 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 
-public class BoatFly extends Module {
+public class BotFly extends Module {
 
     public static boolean active = false;
     private static final double UP_SPEED = 1.0;
     private static final double HORIZONTAL_SPEED = 1.5;
     private static final double GENTLE_FALL = 0.04;
 
-    public BoatFly() {
-        super("BoatFly", "Ride a boat and fly with it. Jump = up, release = slow descent.", Category.MOVEMENT);
+    public BotFly() {
+        super("BotFly", "Ride a boat and fly with it. Jump = up, release = slow descent.", Category.MOVEMENT);
     }
 
     @Override

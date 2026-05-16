@@ -19,7 +19,7 @@ A Fabric utility mod for Minecraft 1.21.4 — built by **Novatex**.
 | Module | Description |
 |---|---|
 | **Fly** | Free survival flight |
-| **BoatFly** | Ride a boat and fly with it. Jump = up, release = slow descent |
+| **BotFly** | Ride a boat and fly with it. Jump = up, release = slow descent |
 | **Speed** | Sprint-like ground speed (no momentum drift) |
 | **NoFall** | Spoofs `onGround=true` in move packets — no fall damage |
 | **Sprint** | Auto-sprint when moving forward |

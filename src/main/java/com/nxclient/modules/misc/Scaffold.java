@@ -2,7 +2,7 @@ package com.nxclient.modules.misc;
 
 import com.nxclient.modules.Module;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.block.BlockItem;
+import net.minecraft.item.BlockItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
