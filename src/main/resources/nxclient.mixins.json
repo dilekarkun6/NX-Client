@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.nxclient.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "EntityMixin",
+    "GameMenuScreenMixin",
+    "ClientPlayerEntityMixin",
+    "GameRendererMixin",
+    "LivingEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

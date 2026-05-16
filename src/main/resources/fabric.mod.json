@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "nxclient",
+  "version": "${version}",
+  "name": "NX Client",
+  "description": "A powerful Fabric utility mod for Minecraft 1.21.4.",
+  "authors": ["dilekarkun6"],
+  "contact": {
+    "sources": "https://github.com/dilekarkun6/NX-Client"
+  },
+  "license": "AGPL-3.0-only",
+  "icon": "assets/nxclient/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.nxclient.NXClient"]
+  },
+  "mixins": ["nxclient.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.16.10",
+    "minecraft": "~1.21.4",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
