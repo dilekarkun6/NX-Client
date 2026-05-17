@@ -1,6 +1,6 @@
 package com.nxclient.mixin;
 
-import com.nxclient.modules.movement.NoClip;
+import com.nxclient.modules.player.Freecam;
 import com.nxclient.modules.render.ESP;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -26,7 +26,7 @@ public class EntityMixin {
 
     @Inject(method = "adjustMovementForCollisions(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;", at = @At("HEAD"), cancellable = true)
     private void onAdjustMovementForCollisions(Vec3d movement, CallbackInfoReturnable<Vec3d> cir) {
-        if (!NoClip.active) return;
+        if (!Freecam.active) return;
         Entity self = (Entity) (Object) this;
         if (self instanceof ClientPlayerEntity) {
             cir.setReturnValue(movement);
