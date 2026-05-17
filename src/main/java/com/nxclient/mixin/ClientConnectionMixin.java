@@ -36,7 +36,7 @@ public abstract class ClientConnectionMixin {
         if (NoFall.active && packet instanceof PlayerMoveC2SPacket
                 && p != null
                 && !p.getAbilities().flying
-                && !p.isFallFlying()
+                && !p.isGliding()
                 && p.fallDistance > 1.5f) {
             ((PlayerMoveC2SPacketAccessor) packet).setOnGroundField(true);
         }
