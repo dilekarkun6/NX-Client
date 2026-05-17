@@ -2,22 +2,18 @@ package com.nxclient.modules.settings;
 
 public class BoolSetting extends Setting<Boolean> {
 
-    public BoolSetting(String name, boolean value) {
-        super(name, value);
+    public BoolSetting(String name, boolean defaultValue) {
+        super(name, defaultValue);
     }
 
     @Override
     public String display() {
-        return name + ": " + (value ? "§aON" : "§cOFF");
+        return name + ": " + (value ? "ON" : "OFF");
     }
 
     @Override
-    public void onIncrement() {
-        value = !value;
-    }
+    public void onIncrement() { value = !value; }
 
     @Override
-    public void onDecrement() {
-        value = !value;
-    }
+    public void onDecrement() { value = !value; }
 }

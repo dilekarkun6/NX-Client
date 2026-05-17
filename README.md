@@ -25,6 +25,7 @@ A Fabric utility mod for Minecraft 1.21.4 — built by **Novatex**.
 | **Sprint** | Auto-sprint when moving forward |
 | **Step** | Step up full blocks without jumping |
 | **Spider** | Climb walls by pressing into them |
+| **Jesus** | Walk on water surfaces. Hold sneak to dive. |
 
 ### Player
 | Module | Description |
@@ -59,7 +60,11 @@ A Fabric utility mod for Minecraft 1.21.4 — built by **Novatex**.
 - **ESC → NX Client** — Open from the pause menu
 - **Drag panel headers** — Move panels around
 - **Left-click a module** — Toggle on/off
-- **Right-click a module** — Expand its settings (slider via left half = decrease, right half = increase)
+- **Right-click a module** — Expand/collapse its settings
+- **Setting: click [-] / [+]** on left/right edge to decrement/increment
+- **Right-click a setting** — Reset just that setting to its default
+- **Reset All Settings** button (bottom-right of GUI) — wipes every module's settings back to defaults
+- **Call Bot** button (bottom of GUI) — opens a dialog to spawn a bot into the current server
 
 ## Build
 ```bash
@@ -106,7 +111,7 @@ NX Client is open source and respects the projects we learned from. Specific tec
 | [**Meteor Client**](https://github.com/MeteorDevelopment/meteor-client) | GPL-3.0 | Module/Category architecture, ClickGUI panel concept, the canonical NoFall pattern (send `PlayerMoveC2SPacket.OnGroundOnly(true, false)` while falling), FullBright through `SimpleOption` accessor, XRay `shouldDrawSide` mixin idea. |
 | [**Wurst Client**](https://github.com/Wurst-Imperium/Wurst7) | GPL-3.0 | KillAura multi-target attack loop, AutoEat hold-use-key pattern, Criticals via `doAttack` HEAD mixin, AutoTotem/AutoArmor slot-swap pattern, ChestStealer QUICK_MOVE pattern. |
 | [**Aoba Client**](https://github.com/coltonk9043/Aoba-Client) | GPL-3.0 | Movable/pinnable ClickGUI windows — our draggable category panel layout is inspired by Aoba. RShift keybind convention, right-click-to-expand-settings pattern. |
-| [**MasterMind-Fabric**](https://github.com/Snowiiii/MasterMind-Fabric) | — | KillAura anti-cheat bypass techniques (rotation packets, controlled cooldown timing). Inspired the AnarchyBypass mode. |
+| [**MasterMind-Fabric**](https://github.com/Snowiiii/MasterMind-Fabric) | GPL-3.0 | KillAura anti-cheat bypass techniques (rotation packets, controlled cooldown timing). Inspired the AnarchyBypass mode. |
 | [**Lambda Client**](https://github.com/lambda-client/lambda) | GPL-3.0 | Blink module pattern — intercepting outgoing packets at the `ClientConnection.send()` level (used in Freecam's packet-block approach). |
 | [**3arthh4ck Fabric**](https://github.com/3arthh4ckDevelopment/3arthh4ck-Fabric) | MIT | Packet manipulation patterns and overall Fabric utility-mod structure. |
 

@@ -5,6 +5,7 @@ import com.nxclient.modules.combat.Criticals;
 import com.nxclient.modules.combat.KillAura;
 import com.nxclient.modules.movement.BotFly;
 import com.nxclient.modules.movement.Fly;
+import com.nxclient.modules.movement.Jesus;
 import com.nxclient.modules.movement.NoFall;
 import com.nxclient.modules.movement.Speed;
 import com.nxclient.modules.movement.Spider;
@@ -26,6 +27,7 @@ import com.nxclient.modules.misc.FastBreak;
 import com.nxclient.modules.misc.FastPlace;
 import com.nxclient.modules.misc.Reach;
 import com.nxclient.modules.misc.Scaffold;
+import com.nxclient.modules.settings.Setting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,7 @@ public class ModuleManager {
         register(new Sprint());
         register(new Step());
         register(new Spider());
+        register(new Jesus());
 
         register(new AutoEat());
         register(new NoHunger());
@@ -88,5 +91,13 @@ public class ModuleManager {
             if (m.getName().equalsIgnoreCase(name)) return m;
         }
         return null;
+    }
+
+    public static void resetAllSettings() {
+        for (Module m : modules) {
+            for (Setting<?> s : m.settings) {
+                s.reset();
+            }
+        }
     }
 }

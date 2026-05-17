@@ -32,4 +32,13 @@ public class EntityMixin {
             cir.setReturnValue(movement);
         }
     }
+
+    @Inject(method = "isTouchingWater", at = @At("HEAD"), cancellable = true)
+    private void onIsTouchingWater(CallbackInfoReturnable<Boolean> cir) {
+        if (!Freecam.active) return;
+        Entity self = (Entity) (Object) this;
+        if (self instanceof ClientPlayerEntity) {
+            cir.setReturnValue(false);
+        }
+    }
 }

@@ -1,8 +1,11 @@
 package com.nxclient.gui;
 
 import com.nxclient.modules.Module;
+import com.nxclient.modules.ModuleManager;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
@@ -33,12 +36,26 @@ public class NXClientScreen extends Screen {
             int x = saved != null ? saved[0] : defaultX;
             int y = saved != null ? saved[1] : defaultY;
             panels.add(new CategoryPanel(category, x, y));
-            defaultX += 120;
-            if (defaultX > this.width - 120) {
+            defaultX += 140;
+            if (defaultX > this.width - 140) {
                 defaultX = 12;
-                defaultY += 160;
+                defaultY += 180;
             }
         }
+
+        this.addDrawableChild(
+                ButtonWidget.builder(Text.literal("§7Reset All Settings"), btn -> {
+                    ModuleManager.resetAllSettings();
+                    MinecraftClient.getInstance().player.sendMessage(
+                            Text.literal("§6[NX] §fAll settings reset to defaults."), true);
+                }).dimensions(this.width - 170, this.height - 24, 160, 18).build()
+        );
+
+        this.addDrawableChild(
+                ButtonWidget.builder(Text.literal("§bCall Bot"), btn ->
+                        MinecraftClient.getInstance().setScreen(new BotCallScreen(this))
+                ).dimensions(this.width - 340, this.height - 24, 160, 18).build()
+        );
     }
 
     @Override
@@ -50,8 +67,8 @@ public class NXClientScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         this.renderBackground(context, mouseX, mouseY, delta);
 
-        context.drawTextWithShadow(this.textRenderer, Text.literal("§fNX Client §7by Novatex"), 6, this.height - 14, 0xFFFFFF);
-        context.drawTextWithShadow(this.textRenderer, Text.literal("§7L-click = toggle  §8|  §7R-click = settings  §8|  §7Drag header = move"), 6, this.height - 26, 0xAAAAAA);
+        context.drawTextWithShadow(this.textRenderer, Text.literal("§fNX Client §7by Novatex"), 6, this.height - 22, 0xFFFFFF);
+        context.drawTextWithShadow(this.textRenderer, Text.literal("§7Left-click toggle · Right-click expand settings"), 6, this.height - 12, 0xAAAAAA);
 
         for (CategoryPanel panel : panels) {
             panel.render(context, mouseX, mouseY, this.textRenderer);

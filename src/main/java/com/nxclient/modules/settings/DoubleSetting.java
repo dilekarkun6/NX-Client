@@ -6,8 +6,8 @@ public class DoubleSetting extends Setting<Double> {
     public final double max;
     public final double step;
 
-    public DoubleSetting(String name, double value, double min, double max, double step) {
-        super(name, value);
+    public DoubleSetting(String name, double defaultValue, double min, double max, double step) {
+        super(name, defaultValue);
         this.min = min;
         this.max = max;
         this.step = step;
