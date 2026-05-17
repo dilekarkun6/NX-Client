@@ -9,59 +9,57 @@ A Fabric utility mod for Minecraft 1.21.4 — built by **Novatex**.
 ## Features
 
 ### Combat
-| Module | Description | Settings |
-|---|---|---|
-| **KillAura** | Attacks ALL nearby living entities simultaneously | Range, Cooldown |
-| **AntiKnockback** | Cancels server-sent knockback velocity packets | — |
-| **Criticals** | Every melee hit becomes a critical via `attackEntity` mixin | — |
+| Module | Description |
+|---|---|
+| **KillAura** | Hits all nearby living entities at once. In AnarchyBypass mode: single target, with rotation, slower attack rate |
+| **AntiKnockback** | Cancels server-sent knockback velocity packets |
+| **Criticals** | Every melee hit becomes a critical via `MinecraftClient.doAttack` HEAD packet injection |
 
 ### Movement
-| Module | Description | Settings |
-|---|---|---|
-| **Fly** | Free survival flight | — |
-| **BotFly** | Ride a boat and fly with it. Jump = up, release = slow descent | UpSpeed, HSpeed, FallSpeed |
-| **Speed** | Sprint-like ground speed (no momentum drift) | Speed |
-| **NoFall** | Spoofs `onGround=true` in move packets — no fall damage | — |
-| **NoClip** | Walk through blocks. Returns you to start position on disable | — |
-| **Sprint** | Auto-sprint when moving forward | — |
-| **Step** | Step up full blocks without jumping | — |
-| **Spider** | Climb walls by pressing into them | — |
+| Module | Description |
+|---|---|
+| **Fly** | Free survival flight |
+| **BotFly** | Ride a boat and fly with it. Jump = up, release = slow descent |
+| **Speed** | Sprint-like ground speed (no momentum drift) |
+| **NoFall** | Sends `OnGroundOnly(true)` packets every tick while falling — server keeps resetting fall distance |
+| **Sprint** | Auto-sprint when moving forward |
+| **Step** | Step up full blocks without jumping |
+| **Spider** | Climb walls by pressing into them |
 
 ### Player
 | Module | Description |
 |---|---|
 | **AutoEat** | Switches to food, holds use key, restores slot when full |
 | **NoHunger** | Keeps food and saturation at max (client-side) |
-| **AutoTotem** | Keeps a Totem of Undying in your offhand automatically |
+| **AutoTotem** | Keeps a Totem of Undying in your offhand |
 | **AutoArmor** | Auto-equips the best armor piece for each slot |
-| **Freecam** | Detaches camera — server thinks you're standing still |
+| **Freecam** | Detached camera with NoClip — pass through anything; returns to start on disable |
 
 ### Render
 | Module | Description |
 |---|---|
 | **ESP** | Highlights all living entities through walls |
 | **FullBright** | Bypasses gamma limit — full visibility everywhere |
-| **XRay** | Hides non-ore blocks so ores show through walls |
+| **XRay** | Hides non-ore blocks, makes ore faces always visible |
 | **HUD** | Shows active modules on screen, color-coded by category |
 
 ### Misc
-| Module | Description | Settings |
-|---|---|---|
-| **AutoFish** | Casts and recasts your fishing rod automatically | — |
-| **Reach** | 2-packet teleport attack for extended reach | MaxReach |
-| **FastPlace** | Places items with no cooldown between clicks | — |
-| **FastBreak** | Removes the between-block break cooldown | — |
-| **Scaffold** | Auto-places blocks under your feet while walking | — |
-| **ChestStealer** | Auto-pulls chest items, with ignore list (default: apple/elma) | — |
+| Module | Description |
+|---|---|
+| **AnarchyBypass** | Master toggle. When ON, combat/movement modules become slower and more anticheat-friendly |
+| **AutoFish** | Casts and recasts your fishing rod automatically |
+| **Reach** | 2-packet teleport attack for extended reach |
+| **FastPlace** | Places items with no cooldown between clicks |
+| **FastBreak** | Removes the between-block break cooldown |
+| **Scaffold** | Auto-places blocks under your feet while walking |
+| **ChestStealer** | Auto-pulls chest items, with ignore list (default: apple/elma) |
 
 ## Controls
 - **Right Shift** — Open the ClickGUI in-game
 - **ESC → NX Client** — Open from the pause menu
-- **Drag panel header** — Move panels around the screen
-- **Left-click module** — Toggle on/off
-- **Right-click module** — Expand to show settings (if any)
-- **Left-click setting** — Left half decrements, right half increments
-- **Right-click setting** — Decrement
+- **Drag panel headers** — Move panels around
+- **Left-click a module** — Toggle on/off
+- **Right-click a module** — Expand its settings (slider via left half = decrease, right half = increase)
 
 ## Build
 ```bash
@@ -76,17 +74,25 @@ Output: `build/libs/nxclient-1.0.0.jar`
 
 ---
 
-## Roadmap: NX Bot Network *(planned next phase — separate project)*
+## NX Bots — multi-bot framework *(separate sub-project, foundation laid)*
 
-A separate sub-project using **MCProtocolLib** that spawns N bots into your own server. Each bot will:
+`bots/` contains a standalone Java app using **MCProtocolLib**. It can already:
+- Connect N bots to a server
+- Auto `/register <pass> <pass>` + `/login <pass>`
+- Use custom or random names
 
-- Auto-register/login via chat (e.g. `/register password password`)
-- Accept commands ("chop 10 logs", "follow me", "stop")
-- Auto-deliver gathered items
-- Chat replies powered by locally-hosted open-source LLM (Ollama or HuggingFace Inference)
-- Configurable names (random or chosen)
+See `bots/README.md` for build and run instructions. Pathfinding, command parsing, and Ollama AI chat replies are the next phases.
 
-This is **not part of NX Client itself** — it will live in a separate repo (`NX-Bots`) and connect to any vanilla/Spigot/Paper server, including your own port-forwarded server. The Fabric client mod stays focused on in-game utilities.
+---
+
+## Anarchy Bypass
+
+**AnarchyBypass** is a master toggle in the Misc category. When on, modules adjust to be less obviously detectable on anticheats like NCP, Vulcan, Grim, Spartan, etc.:
+
+- **KillAura**: switches from multi-target burst to single nearest target, with proper rotation packets and a slower (≥12 tick) cooldown — closer to vanilla click rate
+- More modules will adapt to bypass mode in future updates
+
+Tuning per server/anticheat is recommended — `AnarchyBypass` is a sane default, not a magic bullet.
 
 ---
 
@@ -96,12 +102,22 @@ NX Client is open source and respects the projects we learned from. Specific tec
 
 | Reference | License | What we learned from it |
 |---|---|---|
-| [**Minecraft-Reverse-Engineering**](https://github.com/miracmirza/Minecraft-Reverse-Engineering) by **miracmirza** | No license (used with attribution) | The original spark: Fly velocity control, ESP via `Entity.isGlowing()` mixin, packet-teleport Reach pattern. This was the first project we studied. |
-| [**Meteor Client**](https://github.com/MeteorDevelopment/meteor-client) | GPL-3.0 | Module/Category architecture, settings system, NoFall via `PlayerMoveC2SPacket` `onGround` spoofing, FullBright via `SimpleOption` accessor, XRay `shouldDrawSide` mixin, Criticals 2-packet sequence. |
-| [**Wurst Client**](https://github.com/Wurst-Imperium/Wurst7) | GPL-3.0 | KillAura multi-target loop, AutoEat hold-use-key pattern, AutoTotem/AutoArmor slot-swap, ChestStealer QUICK_MOVE pattern. |
-| [**Aoba Client**](https://github.com/coltonk9043/Aoba-Client) | GPL-3.0 | Movable/pinnable ClickGUI windows — draggable panel layout and right-click expand-for-settings is inspired by Aoba. |
-| [**Lambda Client**](https://github.com/lambda-client/lambda) | GPL-3.0 | Freecam packet-block approach via `ClientConnection.send()`. |
-| [**3arthh4ck Fabric**](https://github.com/3arthh4ckDevelopment/3arthh4ck-Fabric) | MIT | Packet manipulation patterns and Fabric utility-mod structure. NoClip via `Entity.adjustMovementForCollisions` mixin. |
+| [**Minecraft-Reverse-Engineering**](https://github.com/miracmirza/Minecraft-Reverse-Engineering) by **miracmirza** | No license (used with attribution) | The original spark: Fly velocity control, ESP via `Entity.isGlowing()` mixin, packet-teleport Reach pattern. The first project we studied. |
+| [**Meteor Client**](https://github.com/MeteorDevelopment/meteor-client) | GPL-3.0 | Module/Category architecture, ClickGUI panel concept, the canonical NoFall pattern (send `PlayerMoveC2SPacket.OnGroundOnly(true, false)` while falling), FullBright through `SimpleOption` accessor, XRay `shouldDrawSide` mixin idea. |
+| [**Wurst Client**](https://github.com/Wurst-Imperium/Wurst7) | GPL-3.0 | KillAura multi-target attack loop, AutoEat hold-use-key pattern, Criticals via `doAttack` HEAD mixin, AutoTotem/AutoArmor slot-swap pattern, ChestStealer QUICK_MOVE pattern. |
+| [**Aoba Client**](https://github.com/coltonk9043/Aoba-Client) | GPL-3.0 | Movable/pinnable ClickGUI windows — our draggable category panel layout is inspired by Aoba. RShift keybind convention, right-click-to-expand-settings pattern. |
+| [**MasterMind-Fabric**](https://github.com/Snowiiii/MasterMind-Fabric) | — | KillAura anti-cheat bypass techniques (rotation packets, controlled cooldown timing). Inspired the AnarchyBypass mode. |
+| [**Lambda Client**](https://github.com/lambda-client/lambda) | GPL-3.0 | Blink module pattern — intercepting outgoing packets at the `ClientConnection.send()` level (used in Freecam's packet-block approach). |
+| [**3arthh4ck Fabric**](https://github.com/3arthh4ckDevelopment/3arthh4ck-Fabric) | MIT | Packet manipulation patterns and overall Fabric utility-mod structure. |
+
+For the bot project:
+
+| Reference | License | Used for |
+|---|---|---|
+| [**MCProtocolLib**](https://github.com/GeyserMC/MCProtocolLib) | MIT | The protocol layer for `bots/` — speaks Minecraft's wire format without rendering. |
+| [**Mineflayer**](https://github.com/PrismarineJS/mineflayer) | MIT | (Reference only) Conceptual design for high-level bot APIs — pathfinding, inventory, chat. |
+
+If a code path closely follows a specific upstream implementation, the matching project is mentioned in the source file's comment. Anything I missed crediting is unintentional — please open an issue.
 
 ## License
 [GNU Affero General Public License v3.0](LICENSE)

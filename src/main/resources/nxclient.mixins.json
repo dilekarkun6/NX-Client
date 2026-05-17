@@ -12,7 +12,6 @@
     "GameRendererMixin",
     "LivingEntityMixin",
     "MinecraftClientMixin",
-    "PlayerMoveC2SPacketMixin",
     "SimpleOptionAccessor"
   ],
   "injectors": {

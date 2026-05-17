@@ -1,56 +1,70 @@
-# NX Bots — Multi-bot framework for NX Client
+# NX Bots
 
-> **Status: Skeleton.** This is the entry point for spawning bot clients on your own server. It is intentionally a separate Java project (not part of the NX Client Fabric mod) because bots cannot run inside a single Minecraft instance — they each need their own protocol connection.
+> Multi-bot framework for NX Client — standalone Java app that connects N bots to your Minecraft server.
 
-## What this will be
+## What this is
 
-A standalone Java app that spawns N bots and joins them to a server (your own Spigot/Paper/Vanilla server you've port-forwarded).
+A separate Java project (not part of the NX Client Fabric mod). Each bot is its own protocol connection via **MCProtocolLib** — they don't need the game client to run.
 
-Each bot will support:
-- **Auto-register / login**: send `/register password password` on first join, `/login password` thereafter
-- **Following**: `follow <player>` — pathfind to a player and stay near them
-- **Wood-cutting**: `chop <count>` — find trees, chop until reaching `<count>` logs, then return and drop them
-- **Inventory check**: `inv` — report what each bot is holding
-- **Chat replies**: lightweight LLM-backed responses (no paid API). Default: **Ollama** running locally with a small model like `llama3.2:1b` or `phi3:mini`. Fallback to canned responses if Ollama isn't reachable.
-- **Custom names**: random or comma-separated list from CLI
+## Status
 
-## Why it's separate
+| Feature | State |
+|---|---|
+| Connect to server, join world | ✅ Skeleton ready (Bot.java) |
+| Auto `/register pass pass` + `/login pass` | ✅ Implemented |
+| Configurable / random names | ✅ Implemented |
+| Multiple bots in parallel | ✅ Implemented (thread pool) |
+| `follow <player>` command from owner | ⏳ TODO |
+| `chop <count>` wood-cutting | ⏳ TODO |
+| Inventory check + auto-deliver | ⏳ TODO |
+| Ollama AI chat replies | ⏳ TODO |
 
-A Fabric mod runs *inside* one Minecraft client process. Spawning 5 extra "players" requires 5 extra network connections — that's 5 separate `MinecraftClient` instances, which Fabric can't host. The standard solution is **MCProtocolLib** (or **Mineflayer** for Node.js) which speaks the wire protocol directly without rendering a game.
-
-## Planned stack
-
-- **Java 21** (same as NX Client)
-- **MCProtocolLib** (Steveice10) — Minecraft protocol implementation
-- **Ollama HTTP client** for AI chat — calls `http://localhost:11434/api/generate` with the chosen model
-
-## How to run *(when implemented)*
+## Build
 
 ```bash
-# 1. Have Ollama running locally with a small model:
-ollama pull llama3.2:1b
-ollama serve
-
-# 2. Build NX Bots
 cd bots
-./gradlew shadowJar
+gradle shadowJar
+# Output: build/libs/nxbots-all.jar
+```
 
-# 3. Run with: server IP, port, bot count, optional name list
-java -jar build/libs/nxbots-all.jar 127.0.0.1 25565 5 \
+## Run
+
+```bash
+java -jar build/libs/nxbots-all.jar <host> <port> <count> [options]
+```
+
+### Examples
+
+Connect 3 bots to localhost, no auth:
+```bash
+java -jar nxbots-all.jar 127.0.0.1 25565 3
+```
+
+Connect 5 bots with auth and custom names:
+```bash
+java -jar nxbots-all.jar mc.example.com 25565 5 \
   --names "Helper,Worker,Scout,Builder,Friend" \
-  --auth-pass "your-server-register-password"
+  --auth-pass "yourpassword"
 ```
 
-Then in-game:
-```
-[You whisper]    /msg Helper follow me
-[You whisper]    /msg Worker chop 10
-```
+The bots will:
+1. Connect to the server in offline mode (so the server must allow `online-mode=false` in `server.properties`)
+2. Once joined, send `/register <pass> <pass>` then `/login <pass>` if `--auth-pass` is given
+3. Stay idle until commands are added
 
-## What's here right now
+## What's next
 
-A `README.md` (this file) and a placeholder `NXBots.java`. The actual MCProtocolLib integration, command parser, pathfinder, and Ollama client will be filled in across the next few iterations.
+The skeleton works — bots will join your server. Coming next:
+
+- **Tick loop & physics** — pathfinding requires reading world state and sending move packets
+- **Owner command parsing** — bot listens for `[Owner] /msg <botname> follow` etc.
+- **Tree-finding & wood-chopping**
+- **Ollama HTTP client** for chat — points at `http://localhost:11434/api/generate`
+
+## Why not a Fabric mod
+
+A Fabric mod runs inside one Minecraft client. To have 5 player entities on the server, you need 5 client connections — each is a separate `MinecraftProtocol` session. The game client only manages one. MCProtocolLib speaks the wire protocol without rendering anything, which is what we want.
 
 ## License
 
-Same as NX Client — [AGPL-3.0](../LICENSE).
+[AGPL-3.0](../LICENSE) — same as NX Client.

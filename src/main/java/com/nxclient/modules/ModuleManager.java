@@ -5,7 +5,6 @@ import com.nxclient.modules.combat.Criticals;
 import com.nxclient.modules.combat.KillAura;
 import com.nxclient.modules.movement.BotFly;
 import com.nxclient.modules.movement.Fly;
-import com.nxclient.modules.movement.NoClip;
 import com.nxclient.modules.movement.NoFall;
 import com.nxclient.modules.movement.Speed;
 import com.nxclient.modules.movement.Spider;
@@ -20,6 +19,7 @@ import com.nxclient.modules.render.ESP;
 import com.nxclient.modules.render.FullBright;
 import com.nxclient.modules.render.HUD;
 import com.nxclient.modules.render.XRay;
+import com.nxclient.modules.misc.AnarchyBypass;
 import com.nxclient.modules.misc.AutoFish;
 import com.nxclient.modules.misc.ChestStealer;
 import com.nxclient.modules.misc.FastBreak;
@@ -43,7 +43,6 @@ public class ModuleManager {
         register(new BotFly());
         register(new Speed());
         register(new NoFall());
-        register(new NoClip());
         register(new Sprint());
         register(new Step());
         register(new Spider());
@@ -59,6 +58,7 @@ public class ModuleManager {
         register(new XRay());
         register(new HUD());
 
+        register(new AnarchyBypass());
         register(new AutoFish());
         register(new Reach());
         register(new FastPlace());
