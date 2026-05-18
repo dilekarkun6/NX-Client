@@ -6,7 +6,6 @@ import com.nxclient.modules.combat.KillAura;
 import com.nxclient.modules.movement.BotFly;
 import com.nxclient.modules.movement.Fly;
 import com.nxclient.modules.movement.Jesus;
-import com.nxclient.modules.movement.NoFall;
 import com.nxclient.modules.movement.Speed;
 import com.nxclient.modules.movement.Spider;
 import com.nxclient.modules.movement.Sprint;
@@ -14,7 +13,6 @@ import com.nxclient.modules.movement.Step;
 import com.nxclient.modules.player.AutoArmor;
 import com.nxclient.modules.player.AutoEat;
 import com.nxclient.modules.player.AutoTotem;
-import com.nxclient.modules.player.Freecam;
 import com.nxclient.modules.player.NoHunger;
 import com.nxclient.modules.render.ESP;
 import com.nxclient.modules.render.FullBright;
@@ -44,7 +42,6 @@ public class ModuleManager {
         register(new Fly());
         register(new BotFly());
         register(new Speed());
-        register(new NoFall());
         register(new Sprint());
         register(new Step());
         register(new Spider());
@@ -54,7 +51,6 @@ public class ModuleManager {
         register(new NoHunger());
         register(new AutoTotem());
         register(new AutoArmor());
-        register(new Freecam());
 
         register(new ESP());
         register(new FullBright());

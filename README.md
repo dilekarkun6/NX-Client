@@ -21,7 +21,6 @@ A Fabric utility mod for Minecraft 1.21.4 — built by **Novatex**.
 | **Fly** | Free survival flight |
 | **BotFly** | Ride a boat and fly with it. Jump = up, release = slow descent |
 | **Speed** | Sprint-like ground speed (no momentum drift) |
-| **NoFall** | Sends `OnGroundOnly(true)` packets every tick while falling — server keeps resetting fall distance |
 | **Sprint** | Auto-sprint when moving forward |
 | **Step** | Step up full blocks without jumping |
 | **Spider** | Climb walls by pressing into them |
@@ -34,7 +33,6 @@ A Fabric utility mod for Minecraft 1.21.4 — built by **Novatex**.
 | **NoHunger** | Keeps food and saturation at max (client-side) |
 | **AutoTotem** | Keeps a Totem of Undying in your offhand |
 | **AutoArmor** | Auto-equips the best armor piece for each slot |
-| **Freecam** | Detached camera with NoClip — pass through anything; returns to start on disable |
 
 ### Render
 | Module | Description |

@@ -1,8 +1,6 @@
 package com.nxclient.mixin;
 
 import com.nxclient.modules.combat.Criticals;
-import com.nxclient.modules.movement.NoFall;
-import com.nxclient.modules.player.Freecam;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.ClientConnection;
@@ -21,17 +19,12 @@ public abstract class ClientConnectionMixin {
     @Unique
     private static boolean nx_recursionGuard = false;
 
-    @Inject(method = "send(Lnet/minecraft/network/packet/Packet;)V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "send(Lnet/minecraft/network/packet/Packet;)V", at = @At("HEAD"))
     private void onSend(Packet<?> packet, CallbackInfo ci) {
         if (nx_recursionGuard) return;
 
         MinecraftClient mc = MinecraftClient.getInstance();
         ClientPlayerEntity p = mc.player;
-
-        if (Freecam.active && packet instanceof PlayerMoveC2SPacket) {
-            ci.cancel();
-            return;
-        }
 
         if (Criticals.active && packet instanceof PlayerInteractEntityC2SPacket
                 && p != null
