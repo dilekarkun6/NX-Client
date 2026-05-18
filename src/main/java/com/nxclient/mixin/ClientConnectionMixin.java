@@ -33,14 +33,6 @@ public abstract class ClientConnectionMixin {
             return;
         }
 
-        if (NoFall.active && packet instanceof PlayerMoveC2SPacket
-                && p != null
-                && !p.getAbilities().flying
-                && !p.isGliding()
-                && p.fallDistance > 1.0f) {
-            ((PlayerMoveC2SPacketAccessor) packet).setOnGroundField(true);
-        }
-
         if (Criticals.active && packet instanceof PlayerInteractEntityC2SPacket
                 && p != null
                 && p.isOnGround()

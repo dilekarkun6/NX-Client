@@ -3,16 +3,15 @@ package com.nxclient.modules.movement;
 import com.nxclient.modules.Module;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 
 public class NoFall extends Module {
 
     public static boolean active = false;
-    private static final float TRIGGER = 1.0f;
 
     public NoFall() {
-        super("NoFall", "Multi-layered fall protection: packet onGround spoof + OnGroundOnly resync + client fallDistance reset.", Category.MOVEMENT);
+        super("NoFall", "Canonical GrimNoFall: send a near-zero upward Full packet then onLanding() — exploits MC-171969 to keep server fallDistance at 0.", Category.MOVEMENT);
     }
 
     @Override
@@ -26,15 +25,21 @@ public class NoFall extends Module {
 
     private void tick(MinecraftClient client) {
         if (!active || client.player == null) return;
-        if (client.player.getAbilities().flying) return;
-        if (client.player.isGliding()) return;
-        if (client.player.fallDistance <= TRIGGER) return;
+        ClientPlayerEntity p = client.player;
+        if (p.getAbilities().flying) return;
+        if (p.isGliding()) return;
+        if (p.isOnGround()) return;
+        if (p.fallDistance <= 1.0f) return;
 
-        ClientPlayNetworkHandler nh = client.player.networkHandler;
-        if (nh == null) return;
-
-        nh.sendPacket(new PlayerMoveC2SPacket.OnGroundOnly(true, false));
-
-        client.player.fallDistance = 0;
+        p.networkHandler.sendPacket(new PlayerMoveC2SPacket.Full(
+                p.getX(),
+                p.getY() + 0.000000001,
+                p.getZ(),
+                p.getYaw(),
+                p.getPitch(),
+                false,
+                false
+        ));
+        p.onLanding();
     }
 }

@@ -64,6 +64,8 @@ public class Fly extends Module {
             motionY = SPEED;
         } else if (client.options.sneakKey.isPressed()) {
             motionY = -SPEED;
+        } else {
+            motionY = -0.0008;
         }
 
         player.setVelocity(motionX, motionY, motionZ);
