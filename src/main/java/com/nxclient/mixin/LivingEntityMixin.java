@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class LivingEntityMixin {
 
     @Inject(method = "handleFallDamage", at = @At("HEAD"), cancellable = true)
-    private void onFallDamage(double fallDistance, float damageMultiplier, DamageSource source,
+    private void onFallDamage(float fallDistance, float damageMultiplier, DamageSource source,
                               CallbackInfoReturnable<Boolean> cir) {
         if (!NoFall.active) return;
         LivingEntity self = (LivingEntity) (Object) this;
