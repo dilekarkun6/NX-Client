@@ -41,4 +41,31 @@ public class EntityMixin {
             cir.setReturnValue(false);
         }
     }
+
+    @Inject(method = "isInsideWaterOrBubbleColumn", at = @At("HEAD"), cancellable = true)
+    private void onIsInsideWaterOrBubbleColumn(CallbackInfoReturnable<Boolean> cir) {
+        if (!Freecam.active) return;
+        Entity self = (Entity) (Object) this;
+        if (self instanceof ClientPlayerEntity) {
+            cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(method = "isSubmergedInWater", at = @At("HEAD"), cancellable = true)
+    private void onIsSubmergedInWater(CallbackInfoReturnable<Boolean> cir) {
+        if (!Freecam.active) return;
+        Entity self = (Entity) (Object) this;
+        if (self instanceof ClientPlayerEntity) {
+            cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(method = "isInLava", at = @At("HEAD"), cancellable = true)
+    private void onIsInLava(CallbackInfoReturnable<Boolean> cir) {
+        if (!Freecam.active) return;
+        Entity self = (Entity) (Object) this;
+        if (self instanceof ClientPlayerEntity) {
+            cir.setReturnValue(false);
+        }
+    }
 }
