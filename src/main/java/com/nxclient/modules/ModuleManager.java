@@ -6,6 +6,7 @@ import com.nxclient.modules.combat.KillAura;
 import com.nxclient.modules.movement.BotFly;
 import com.nxclient.modules.movement.Fly;
 import com.nxclient.modules.movement.Jesus;
+import com.nxclient.modules.movement.NoFall;
 import com.nxclient.modules.movement.Speed;
 import com.nxclient.modules.movement.Spider;
 import com.nxclient.modules.movement.Sprint;
@@ -42,6 +43,7 @@ public class ModuleManager {
         register(new Fly());
         register(new BotFly());
         register(new Speed());
+        register(new NoFall());
         register(new Sprint());
         register(new Step());
         register(new Spider());
